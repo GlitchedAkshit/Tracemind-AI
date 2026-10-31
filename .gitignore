@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+*.db
+*.db-shm
+*.db-wal
+backend/data/
+
+# Node / Next
+node_modules/
+.next/
+frontend/test-results/
+frontend/playwright-report/
+next-env.d.ts
+
+# Personal guide with interview notes; remove this line to publish it
+TraceMind_Project_Guide.docx
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

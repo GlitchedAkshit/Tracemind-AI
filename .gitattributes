@@ -1,0 +1,7 @@
+# Normalise line endings so Windows and Linux checkouts match (Docker and CI run on Linux)
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.ico binary
+*.docx binary

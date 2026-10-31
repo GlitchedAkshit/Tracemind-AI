@@ -1,0 +1,157 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "./shadcn-tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * TraceMind design tokens — derived from the AXON research-lab reference:
+ * pure black canvas, lavender accent, near-white text, muted grey labels,
+ * hairline borders, thin monospace type.
+ */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans-stack);
+  --font-mono: var(--font-mono-stack);
+  --font-heading: var(--font-mono-stack);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-lavender: var(--tm-accent);
+  --color-chip: var(--tm-chip);
+  --color-hairline: var(--tm-border);
+  --color-dim: var(--tm-muted);
+  --color-sev-critical: var(--tm-critical);
+  --color-sev-high: var(--tm-high);
+  --color-sev-medium: var(--tm-medium);
+  --color-sev-low: var(--tm-low);
+  --color-ok: var(--tm-ok);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  --font-mono-stack: "SF Mono", ui-monospace, Menlo, Consolas, "Liberation Mono", "Courier New", monospace;
+  --font-sans-stack: ui-sans-serif, -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+
+  --tm-bg: #000000;
+  --tm-accent: #aa88ff;
+  --tm-text: #dddddd;
+  --tm-muted: #8a8a8a;
+  --tm-chip: #1c1c1c;
+  --tm-border: #2a2a2a;
+  --tm-surface: #0a0a0a;
+  --tm-critical: #ff6b81;
+  --tm-high: #ffa45c;
+  --tm-medium: #e6cf5c;
+  --tm-low: #7fb8ff;
+  --tm-ok: #6fd6a8;
+
+  --background: var(--tm-bg);
+  --foreground: var(--tm-text);
+  --card: var(--tm-surface);
+  --card-foreground: var(--tm-text);
+  --popover: #0d0d0d;
+  --popover-foreground: var(--tm-text);
+  --primary: var(--tm-accent);
+  --primary-foreground: #0b0614;
+  --secondary: var(--tm-chip);
+  --secondary-foreground: var(--tm-text);
+  --muted: var(--tm-chip);
+  --muted-foreground: var(--tm-muted);
+  --accent: #17121f;
+  --accent-foreground: #e9e1ff;
+  --destructive: var(--tm-critical);
+  --border: var(--tm-border);
+  --input: #333333;
+  --ring: var(--tm-accent);
+  --chart-1: #aa88ff;
+  --chart-2: #6fd6a8;
+  --chart-3: #ffa45c;
+  --chart-4: #7fb8ff;
+  --chart-5: #ff6b81;
+  --radius: 0.25rem;
+  color-scheme: dark;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-mono;
+    background: var(--tm-bg);
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-size: 13px;
+    letter-spacing: 0.01em;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection {
+    background: rgb(170 136 255 / 0.35);
+    color: #fff;
+  }
+  :focus-visible {
+    outline: 1px solid var(--tm-accent);
+    outline-offset: 2px;
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #2a2a2a transparent;
+  }
+}
+
+@layer components {
+  /* small uppercase monospace label, the AXON signature */
+  .tm-label {
+    @apply font-mono text-[10px] uppercase tracking-[0.18em] text-dim;
+  }
+  .tm-panel {
+    @apply border border-hairline bg-card/60 backdrop-blur-[2px];
+  }
+  .tm-chip {
+    @apply inline-flex items-center gap-1 rounded-sm border border-hairline bg-chip px-1.5 py-0.5 font-mono text-[11px] text-foreground/90;
+  }
+  .tm-link {
+    @apply text-lavender underline-offset-4 hover:underline;
+  }
+  .tm-prose {
+    @apply font-sans text-[14px] leading-relaxed text-foreground;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
