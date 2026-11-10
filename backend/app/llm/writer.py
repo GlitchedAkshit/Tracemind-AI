@@ -11,7 +11,7 @@ import json
 import logging
 import re
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from app.analysis.ranking import CAUSE_LABEL
 from app.llm.evidence import EvidenceBundle, resolve_aliases
@@ -182,7 +182,13 @@ def deterministic_answer(question: str, bundle: EvidenceBundle) -> dict:
 
     if intent == "change":
         changes = [e for e in bundle.events if e["type"] == "deployment" and e["time"] <= bundle.incident["started_at"]]
-        first_errors = [e for e in bundle.events if e.get("severity") in ("error", "critical", "fatal")][:2]
+        # "first failure" means near onset: background errors from the lookback window are not it
+        onset = datetime.fromisoformat(bundle.incident["started_at"])
+        first_errors = [
+            e for e in bundle.events
+            if e.get("severity") in ("error", "critical", "fatal")
+            and datetime.fromisoformat(e["time"]) >= onset - timedelta(minutes=2)
+        ][:2]
         if not changes:
             text = ("No deployment or change event was recorded before the first anomaly in the supplied evidence. "
                     "That does not rule out an unrecorded change.")

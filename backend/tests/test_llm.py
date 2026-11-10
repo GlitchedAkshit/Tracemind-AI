@@ -139,3 +139,11 @@ def test_assistant_llm_answer_validated():
 def test_aliases_in_prose_become_short_event_ids():
     ans, _ = answer_question("What changed immediately before the first failure?", bundle(), None)
     assert "evt evt-depl" in ans["answer"] and not re.search(r"\bE\d{2}\b", ans["answer"])
+
+
+def test_change_answer_ignores_background_errors_long_before_onset():
+    early = {"id": "evt-old", "service": "auth", "event_type": "log", "occurred_at": T.replace(minute=0), "severity": "error",
+             "message": "background glitch", "trace_id": None, "attributes": {}}
+    b = build_bundle(INCIDENT, HYPS, [*EVENTS, early], extra_event_ids=["evt-old"])
+    ans, _ = answer_question("What changed immediately before the first failure?", b, None)
+    assert "evt-old" not in ans["evidence_ids"] and "evt-err" in ans["evidence_ids"]
