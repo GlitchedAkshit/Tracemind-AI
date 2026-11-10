@@ -372,7 +372,8 @@ class EvaluationRun(Base):
 class EvaluationResult(Base):
     __tablename__ = "evaluation_results"
     __table_args__ = (
-        UniqueConstraint("evaluation_run_id", "scenario_id", "strategy", name="uq_eval_result"),
+        # one row per injected fault: two-fault scenarios have two causes, each in its own service
+        UniqueConstraint("evaluation_run_id", "scenario_id", "strategy", "true_cause_service", name="uq_eval_result"),
     )
     id: Mapped[uuid.UUID] = pk()
     evaluation_run_id: Mapped[uuid.UUID] = mapped_column(

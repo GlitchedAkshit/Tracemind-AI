@@ -226,3 +226,17 @@ def test_evaluation_run(client):
     csv_body = client.get(f"{API}/evaluation-runs/{run['id']}/export?format=csv").text
     assert csv_body.startswith("scenario_id,")
     assert client.post(f"{API}/evaluation-runs", json={"scenario_count": 1000}).status_code == 422
+
+
+def test_evaluation_run_with_two_fault_scenario(client):
+    from app.bench.generator import random_scenario
+
+    # seed 42, scenario 4 injects two faults; both must be stored without clashing
+    assert len(random_scenario(42, 4).faults) == 2
+    client.post(f"{API}/auth/register", json={"email": "m@x.io", "password": "long-enough-pass", "display_name": "M"})
+    run = client.post(f"{API}/evaluation-runs", json={"seed": 42, "scenario_count": 5, "strategies": ["hybrid"]}).json()
+    run = client.get(f"{API}/evaluation-runs/{run['id']}").json()
+    assert run["status"] == "completed", run["error_message"]
+    results = client.get(f"{API}/evaluation-runs/{run['id']}/results").json()
+    assert len(results) == run["metrics"]["injected_faults"] == 6
+    assert sum(r["multi_fault"] for r in results) == 2
