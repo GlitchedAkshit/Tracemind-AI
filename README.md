@@ -2,6 +2,8 @@
 
 **Evidence-driven incident investigation for distributed web applications.**
 
+**Live demo:** https://tracemind-8z6c.onrender.com (free hosting: the first visit after a quiet period can take about a minute while the server wakes up; choose *Explore the synthetic demo project*).
+
 TraceMind ingests logs, distributed traces, metrics, deployment events and declared service dependencies. It then:
 
 1. detects anomalies with robust statistics,
