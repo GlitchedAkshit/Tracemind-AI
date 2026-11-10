@@ -1,0 +1,39 @@
+# Render Blueprint: one free web service (UI + API in one container) and one free PostgreSQL database.
+# Deploy: Render dashboard -> New -> Blueprint -> pick this repository -> Apply.
+databases:
+  - name: tracemind-db
+    plan: free
+    region: singapore
+    databaseName: tracemind
+    user: tracemind
+    postgresMajorVersion: "17"
+
+services:
+  - type: web
+    name: tracemind
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerfilePath: ./deploy/render.Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/v1/health
+    autoDeploy: true
+    envVars:
+      - key: TRACEMIND_DATABASE_URL
+        fromDatabase:
+          name: tracemind-db
+          property: connectionString
+      - key: TRACEMIND_ENV
+        value: production
+      - key: TRACEMIND_SECRET_KEY
+        generateValue: true
+      - key: TRACEMIND_COOKIE_SECURE
+        value: "true"
+      - key: TRACEMIND_DEMO_MODE
+        value: "true"
+      - key: TRACEMIND_SEED_ON_STARTUP
+        value: "true"
+      - key: TRACEMIND_ANALYSIS_WORKERS
+        value: "1"
+      - key: TRACEMIND_LLM_PROVIDER
+        value: deterministic

@@ -2,7 +2,7 @@
 
 from functools import lru_cache
 
-from pydantic import Field
+from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 DEV_SECRET = "dev-insecure-change-me-not-for-production-use"  # noqa: S105 - rejected at startup in production
@@ -47,6 +47,15 @@ class Settings(BaseSettings):
     llm_max_output_tokens: int = 16000
 
     log_level: str = "INFO"
+
+    @field_validator("database_url")
+    @classmethod
+    def _psycopg_driver(cls, url: str) -> str:
+        # Hosting providers hand out postgres:// or postgresql:// URLs; SQLAlchemy needs the driver named.
+        for prefix in ("postgres://", "postgresql://"):
+            if url.startswith(prefix):
+                return "postgresql+psycopg://" + url[len(prefix):]
+        return url
 
     @property
     def is_sqlite(self) -> bool:

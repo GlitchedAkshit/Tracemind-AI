@@ -1,0 +1,19 @@
+# Build context for deploy/render.Dockerfile (repository root)
+.git
+.github
+**/node_modules
+**/.venv
+**/__pycache__
+**/.pytest_cache
+**/.ruff_cache
+frontend/.next
+frontend/test-results
+backend/data
+backend/tests
+benchmarks
+docs
+samples
+*.db
+*.docx
+.env
+.env.*

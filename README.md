@@ -62,6 +62,12 @@ docker compose up --build
 
 Open http://localhost:3000 and choose **Explore the synthetic demo project**. On first start the API runs migrations, generates the synthetic ShopFlow dataset (≈21k events, two injected faults, a decoy deployment and a noise blip) and analyses its incidents.
 
+> **Troubleshooting:** if the backend exits with `password authentication failed`, the database volume was created with a different `POSTGRES_PASSWORD` than your current `.env`. Either restore the old password in `.env`, or reset local data with `docker compose down -v`.
+
+## Deploying (Render, free plan)
+
+`render.yaml` defines a one-click Render Blueprint: a free PostgreSQL database plus one free web service built from `deploy/render.Dockerfile`, which runs the Next.js UI and the FastAPI backend in a single container. In Render choose **New → Blueprint**, select this repository and click **Apply**. A secret key is generated automatically. See [docs/deployment.md](docs/deployment.md) for details and free-plan limits.
+
 To try uploads, register an account, create a project in **Settings**, and upload `samples/shopflow-sample.jsonl` (or the deliberately broken `samples/malformed-sample.jsonl`).
 
 ## Local development (without Docker)

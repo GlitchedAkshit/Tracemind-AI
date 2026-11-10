@@ -1,6 +1,22 @@
 # Deployment guide
 
-> Status: the Docker Compose stack has been built and verified locally (PostgreSQL 17, migrations, seeding, Playwright e2e). **No public deployment has been performed from this repository.** The steps below describe a supported path; none of them have been executed.
+> Status: the Docker Compose stack has been built and verified locally (PostgreSQL 17, migrations, seeding, Playwright e2e). The single-container Render image (`deploy/render.Dockerfile`) was tested locally under a 512 MB memory limit with all Playwright tests passing.
+
+## Recommended: Render Blueprint (free)
+
+1. Sign in to https://render.com with GitHub.
+2. **New → Blueprint**, pick this repository, then **Apply**. Render creates `tracemind-db` (PostgreSQL 17) and the `tracemind` web service from `render.yaml`.
+3. The first build takes several minutes. On first start the app runs migrations and seeds the synthetic demo. The service is live once `/api/v1/health` returns `ok`.
+
+In this layout Next.js listens on Render's `$PORT` and proxies `/api/v1` to FastAPI on `127.0.0.1:8000` inside the same container (`deploy/start.sh`). Render's `postgresql://` connection string is converted to the psycopg driver automatically.
+
+Free-plan limits:
+
+- The web service sleeps after 15 minutes without traffic; the next visit takes about a minute to wake it.
+- Free PostgreSQL databases expire 30 days after creation unless upgraded.
+- Uploaded raw files are stored on the container's temporary disk and are lost on restart (parsed events stay in PostgreSQL).
+
+## Alternative: separate services
 
 ## Topology
 

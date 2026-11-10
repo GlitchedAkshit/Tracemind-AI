@@ -103,3 +103,11 @@ def test_row_limit_rejects_excess_rows():
 def test_non_utf8_file_reported():
     result = parse_file(b"\xff\xfe\x00bad", "x.csv")
     assert result.rejected_rows == 1 and "UTF-8" in result.errors[0]["error"]
+
+
+def test_hosted_database_urls_get_the_psycopg_driver():
+    from app.config import Settings
+
+    for raw in ("postgres://u:p@h:5432/db", "postgresql://u:p@h:5432/db"):
+        assert Settings(database_url=raw).database_url == "postgresql+psycopg://u:p@h:5432/db"
+    assert Settings(database_url="sqlite:///x.db").database_url == "sqlite:///x.db"
